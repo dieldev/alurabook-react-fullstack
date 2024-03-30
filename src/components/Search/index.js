@@ -45,7 +45,7 @@ const Resultado = styled.div`
     width: 100px;
   }
   &:hover {
-    border: 1px solid #FFF;
+    border: 1px solid #fff;
     border-radius: 15px;
     font-weight: bold;
     font-size: 20px;
@@ -64,12 +64,16 @@ function Search() {
       <Subtitulo>Encontre seu livro em nossa estante.</Subtitulo>
       <Input
         placeholder="Escreva sua próxima leitura"
-        onBlur={(evento) => {
+        onChange={(evento) => {
           const textoDigitado = evento.target.value;
-          const resultadoPesquisa = livros.filter((livro) =>
-            livro.nome.includes(textoDigitado)
-          );
-          setlivrosPesquisados(resultadoPesquisa);
+          if (textoDigitado === "") {
+            setlivrosPesquisados([]);
+          } else {
+            const resultadoPesquisa = livros.filter((livro) =>
+              livro.nome.toLowerCase().includes(textoDigitado.toLowerCase())
+            );
+            setlivrosPesquisados(resultadoPesquisa);
+          }
         }}
       />
       <ResultadoContainer>
