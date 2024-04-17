@@ -1,7 +1,9 @@
-import Input from "../Input";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useState } from "react";
-import { livros } from "./dataSearch";
+import { postFavorito } from "../../services/favoritos";
+import { getLivros } from "../../services/livros";
+import Input from "../Input";
+import imagemBook from "../../images/livro.png"
 
 const SearchContainer = styled.section`
   background-image: linear-gradient(90deg, #003d4f 35%, #94e1e2 165%);
@@ -57,6 +59,21 @@ const Resultado = styled.div`
 
 function Search() {
   const [livrosPesquisados, setlivrosPesquisados] = useState([]);
+  const [livros, setLivros] = useState([]);
+
+  useEffect(() => {
+    fetchLivros();
+  }, []);
+
+  async function fetchLivros() {
+    const livrosAPI = await getLivros();
+    setLivros(livrosAPI);
+  }
+
+  async function insertFavorito(id) {
+    await postFavorito(id)
+    alert(`Livro de id:${id} inserido!`)
+  }
 
   return (
     <SearchContainer>
@@ -70,7 +87,9 @@ function Search() {
             setlivrosPesquisados([]);
           } else {
             const resultadoPesquisa = livros.filter((livro) =>
-              livro.nome.toLowerCase().includes(textoDigitado.toLowerCase())
+              livro && livro.nome
+                ? livro.nome.toLowerCase().includes(textoDigitado.toLowerCase())
+                : false
             );
             setlivrosPesquisados(resultadoPesquisa);
           }
@@ -78,9 +97,9 @@ function Search() {
       />
       <ResultadoContainer>
         {livrosPesquisados.map((livro) => (
-          <Resultado>
+          <Resultado onClick={() => insertFavorito(livro.id)}>
             <p>{livro.nome}</p>
-            <img src={livro.src} alt={livro.nome} />
+            <img src={imagemBook} alt={livro.nome} />
           </Resultado>
         ))}
       </ResultadoContainer>

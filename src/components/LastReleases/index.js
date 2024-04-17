@@ -23,6 +23,7 @@ function LastReleases() {
   return (
     <LastReleasesContainer>
         <Title 
+            setBackgroundColor="#FFF"
             setColor="#EB9B00"
             setFontSize="36px">
             ÚLTIMOS LANÇAMENTOS
